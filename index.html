@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="generate-input" class="form-control" type="text">
+                    <button onclick="inputPin()" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="check-input" class="form-control" type="text">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div onclick= "input(`7`)" class="button">7</div>
+                              <div onclick= "input(`8`)" class="button">8</div>
+                              <div onclick= "input(`9`)" class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick= "input(`4`)" class="button">4</div>
+                              <div onclick= "input(`5`)" class="button">5</div>
+                              <div onclick= "input(`6`)" class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick= "input(`1`)" class="button">1</div>
+                              <div onclick= "input(`2`)" class="button">2</div>
+                              <div onclick= "input(`3`)" class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="cutLastValue()" class="button"><</div>
+                                <div onclick= "input(`0`)" class="button">0</div>
+                                <div onclick= "allClear(``)" class="button">C</div>
+                            </div>
+                            <div>
+                                <button id="check-btn" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left"> <span id="valid-try">3</span> try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p id="nve-notify" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="pve-notify" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+
+    <script>
+        function inputPin() {
+            const getPin = Math.random()*(9999 - 1000) + 1000;
+            const getPinNumber = Math.round(getPin);
+            document.getElementById(`generate-input`).value = getPinNumber;
+            warning();
+            allClear();
+        }
+
+        function input(num) {
+            document.getElementById(`check-input`).value += num;
+        }
+
+        document.getElementById(`check-btn`).addEventListener(`click`, function () {
+            const generateInput = document.getElementById(`generate-input`).value;
+            const checkInput = document.getElementById(`check-input`).value;
+            if (generateInput == checkInput && checkInput != ``) {
+                document.getElementById(`pve-notify`).style.display = `block`;     
+            }
+            if (generateInput !== checkInput || checkInput === ``) {
+                document.getElementById(`nve-notify`).style.display = `block`;   
+            }
+
+            const validTry = document.getElementById(`valid-try`);
+            const validNum = parseInt(validTry.innerText);
+            let newValidNum = validNum;
+            if (newValidNum > 0) {
+                newValidNum = validNum - 1;
+                document.getElementById(`valid-try`).innerText = newValidNum;
+            }
+            if (newValidNum === 0) {
+                document.getElementById(`check-btn`).disabled = true;
+                alert("Button has been disabled.");
+                warning();
+            }
+        })
+
+        function allClear() {
+            document.getElementById(`check-input`).value = ``;
+        }
+
+        function cutLastValue() {
+            const elements = document.getElementById(`check-input`).value;
+            document.getElementById(`check-input`).value = elements.slice(0 , elements.length - 1);
+        }
+
+        function warning() {
+            document.getElementById(`pve-notify`).style.display = `none`;
+            document.getElementById(`nve-notify`).style.display = `none`;
+        }
+
+    </script>
+</body>
+</html>
